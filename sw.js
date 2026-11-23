@@ -1,5 +1,5 @@
 // Caches the app shell so the app opens offline. Bump VERSION after editing files.
-const VERSION = "dictionary-v3";
+const VERSION = "dictionary-v4";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", e => {
