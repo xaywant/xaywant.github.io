@@ -8,7 +8,7 @@
 <link rel="icon" href="icon-192.png">
 <title>Dictionary</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:wght@400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
 :root{--gl:rgba(255,255,255,.07);--gb:rgba(255,255,255,.13);--bg:#000;--sf:#1c1c1e;--sf2:#2c2c2e;--ink:#fff;--mut:#8e8e93;--line:#2c2c2e;--accent:#4fc3cd;--on:#04121a;--glass:rgba(40,40,44,.55);--ff:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--tw:700;--ls:-.02em;--body:1rem}
 html[data-theme=light]{--gl:rgba(255,255,255,.62);--gb:rgba(255,255,255,.85);--bg:#f2f2f7;--sf:#fff;--sf2:#e5e5ea;--ink:#111;--mut:#6c6c70;--line:#e5e5ea;--glass:rgba(255,255,255,.6)}
@@ -47,7 +47,7 @@ h2{font:var(--tw) 1.25rem var(--ff);letter-spacing:var(--ls);margin:28px 0 10px}
 .sw{width:52px;height:30px;border-radius:999px;background:var(--sf2);position:relative;flex:none;transition:background .2s}
 .sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s}
 .sw[aria-checked=true]{background:#30d158}.sw[aria-checked=true]::after{transform:translateX(22px)}
-.dots{display:flex;gap:14px;padding:4px 18px 18px}
+.dots{display:flex;gap:14px;padding:4px 18px 14px}
 .dots button{width:36px;height:36px;border-radius:50%;border:3px solid transparent;background-clip:padding-box;outline:2px solid transparent}
 .dots button[aria-pressed=true]{border-color:var(--bg);outline-color:var(--ink)}
 .card{background:var(--sf);border-radius:26px;padding:24px 20px;margin-top:20px}
@@ -64,13 +64,13 @@ ol{margin:0;padding-left:1.3rem}li{margin-bottom:12px;padding-left:4px}
 .chip{background:var(--sf2);border-radius:999px;padding:8px 15px}
 .sub{color:var(--mut);font-weight:600;font-size:.9rem;margin:24px 0 10px}
 .msg{color:var(--mut);margin:26px 4px}
-nav{position:fixed;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));max-width:520px;margin:0 auto;display:flex;padding:6px;border-radius:999px;background:var(--glass);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(26px) saturate(180%);-webkit-backdrop-filter:blur(26px) saturate(180%);z-index:5}
+nav{position:fixed;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));max-width:520px;margin:0 auto;display:flex;padding:6px;border-radius:999px;background:var(--glass);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(calc(var(--blur,22px) + 4px)) saturate(180%);-webkit-backdrop-filter:blur(calc(var(--blur,22px) + 4px)) saturate(180%);z-index:5}
 nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 0 7px;border-radius:999px;font-size:.75rem;font-weight:600;color:var(--mut)}
 nav button[aria-current=page]{background:rgba(127,127,127,.28);color:var(--ink)}
 html.noglass nav{background:var(--sf);backdrop-filter:none;-webkit-backdrop-filter:none}
 body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(70% 38% at 10% -4%,color-mix(in srgb,var(--accent) 38%,transparent),transparent 70%),radial-gradient(55% 34% at 100% 38%,color-mix(in srgb,#a78bfa 26%,transparent),transparent 70%),radial-gradient(70% 40% at 0% 102%,color-mix(in srgb,var(--accent) 26%,transparent),transparent 70%)}
 html[data-theme=light] body::before{opacity:.5}
-.bar,.group,.card,.back{background:var(--gl);border:1px solid var(--gb);backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%)}
+.bar,.group,.card,.back{background:var(--gl);border:1px solid var(--gb);backdrop-filter:blur(var(--blur,22px)) saturate(160%);-webkit-backdrop-filter:blur(var(--blur,22px)) saturate(160%)}
 html.noglass body::before{display:none}
 html.noglass .bar,html.noglass .group,html.noglass .card,html.noglass .back{background:var(--sf);border-color:var(--line);backdrop-filter:none;-webkit-backdrop-filter:none}
 .sk{display:flex;flex-direction:column;gap:14px;padding:26px 20px}
@@ -78,10 +78,49 @@ html.noglass .bar,html.noglass .group,html.noglass .card,html.noglass .back{back
 .sk .w1{height:34px;width:48%;border-radius:12px;margin-bottom:6px}.sk .w2{width:24%}.sk .w3{width:92%}.sk .w4{width:78%}
 @keyframes sh{to{background-position:-200% 0}}
 html.calm .sk .l{animation:none}
+.dlg{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:24px;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.dlg .box{width:min(100%,340px);border-radius:26px;padding:24px 22px 16px;background:var(--bg);border:1px solid var(--gb);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+html:not(.noglass) .dlg .box{background:color-mix(in srgb,var(--sf) 72%,transparent);backdrop-filter:blur(calc(var(--blur,22px) + 8px)) saturate(170%);-webkit-backdrop-filter:blur(calc(var(--blur,22px) + 8px)) saturate(170%)}
+.dlg h3{font:var(--tw) 1.3rem var(--ff);letter-spacing:var(--ls);margin:0 0 6px}
+.dlg p{margin:0 0 18px;color:var(--mut)}
+.dlg .act{display:flex;gap:10px}
+.dlg .act button{flex:1;padding:13px 0;border-radius:999px;font-weight:600;background:rgba(127,127,127,.22)}
+.dlg .act .warn{background:#ff453a;color:#fff}
+.rng{padding:2px 18px 16px}
+.rng input{width:100%;-webkit-appearance:none;appearance:none;height:14px;border-radius:999px;background:var(--sf2);margin:0;outline-offset:6px}
+.rng input::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid rgba(0,0,0,.35);box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.rng input::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid rgba(0,0,0,.35)}
+.rng .hue{background:linear-gradient(90deg,hsl(0 65% 57%),hsl(45 65% 57%),hsl(90 65% 57%),hsl(135 65% 57%),hsl(180 65% 57%),hsl(225 65% 57%),hsl(270 65% 57%),hsl(315 65% 57%),hsl(360 65% 57%))}
+.rng .shade{background:linear-gradient(90deg,hsl(var(--h,186) 65% 30%),hsl(var(--h,186) 65% 85%))}
+.rng #gl{background:linear-gradient(90deg,rgba(127,127,127,.2),var(--accent))}
+.swatch{width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);flex:none}
+.toast{position:fixed;left:50%;top:calc(16px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:30;display:flex;align-items:center;gap:10px;padding:12px 20px;border-radius:999px;font-weight:600;white-space:nowrap;background:color-mix(in srgb,var(--sf) 82%,transparent);border:1px solid var(--gb);backdrop-filter:blur(24px) saturate(170%);-webkit-backdrop-filter:blur(24px) saturate(170%);box-shadow:0 10px 30px rgba(0,0,0,.35);animation:tin .35s cubic-bezier(.2,.8,.2,1)}
+.toast .ic{color:#30d158;width:20px;height:20px;stroke-width:2.6}
+@keyframes tin{from{opacity:0;transform:translate(-50%,-14px) scale(.95)}}
+html.noglass .toast{background:var(--sf);backdrop-filter:none;-webkit-backdrop-filter:none}
+#splash{position:fixed;inset:0;z-index:100;background:#000;display:grid;place-items:center}
+#splash .tile{width:132px;height:132px;border-radius:32px;display:grid;place-items:center;background:linear-gradient(145deg,#2b0707,#0e0000);border:1px solid rgba(255,70,70,.28);box-shadow:0 0 56px rgba(255,30,30,.28)}
+#splash svg{width:78px;height:auto;aspect-ratio:220/160;filter:drop-shadow(0 0 10px rgba(255,40,40,.5))}
 html.calm *{transition:none!important;scroll-behavior:auto!important}
 </style>
 </head>
 <body>
+<div id="splash" aria-hidden="true"><div class="tile"><svg viewBox="0 0 220 160" fill="none">
+<defs>
+<linearGradient id="gP1" x1="0" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#ff6a5c"/><stop offset=".5" stop-color="#e41818"/><stop offset="1" stop-color="#a30000"/></linearGradient>
+<linearGradient id="gP2" x1="1" y1="0" x2=".1" y2="1"><stop offset="0" stop-color="#ff5547"/><stop offset=".5" stop-color="#d11212"/><stop offset="1" stop-color="#8a0000"/></linearGradient>
+<linearGradient id="gCv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a0505"/><stop offset="1" stop-color="#4a0000"/></linearGradient>
+</defs>
+<path d="M110 146C92 126 52 120 12 128V44C52 34 92 40 110 58C128 40 168 34 208 44V128C168 120 128 126 110 146Z" fill="url(#gCv)" stroke="url(#gCv)" stroke-width="6" stroke-linejoin="round"/>
+<path d="M110 62C90 44 52 38 20 46V118C52 110 90 116 110 134Z" fill="#b01010" stroke="#b01010" stroke-width="4" stroke-linejoin="round"/>
+<path d="M110 62C130 44 168 38 200 46V118C168 110 130 116 110 134Z" fill="#930a0a" stroke="#930a0a" stroke-width="4" stroke-linejoin="round"/>
+<path d="M110 52C90 34 52 28 20 36V110C52 102 90 108 110 126Z" fill="url(#gP1)" stroke="url(#gP1)" stroke-width="4" stroke-linejoin="round"/>
+<path d="M110 52C130 34 168 28 200 36V110C168 102 130 108 110 126Z" fill="url(#gP2)" stroke="url(#gP2)" stroke-width="4" stroke-linejoin="round"/>
+<path d="M110 54V124" stroke="#4d0000" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M28 40C58 35 88 41 104 56" stroke="#fff" stroke-opacity=".3" stroke-width="2" stroke-linecap="round"/>
+<path d="M192 40C162 35 132 41 116 56" stroke="#fff" stroke-opacity=".18" stroke-width="2" stroke-linecap="round"/>
+</svg></div></div>
+<script>(function(){var s=document.getElementById("splash");function go(){if(s){s.remove();s=null}}requestAnimationFrame(function(){requestAnimationFrame(function(){setTimeout(go,1000)})});setTimeout(go,4000)})()</script>
 <svg width="0" height="0" style="position:absolute"><defs>
 <symbol id="home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 01-1 1h-4v-6h-8v6H4a1 1 0 01-1-1z"/></symbol>
 <symbol id="mark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></symbol>
@@ -92,6 +131,7 @@ html.calm *{transition:none!important;scroll-behavior:auto!important}
 <symbol id="x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
 <symbol id="brush" viewBox="0 0 24 24"><path d="M12 3s6 6 6 11a6 6 0 01-12 0c0-5 6-11 6-11z"/></symbol>
 <symbol id="list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+<symbol id="ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
 <symbol id="trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
 </defs></svg>
 
@@ -126,7 +166,7 @@ html.calm *{transition:none!important;scroll-behavior:auto!important}
     <button class="row" id="clrHist"><svg class="ic"><use href="#trash"/></svg><span class="t">Clear recent searches</span></button>
     <button class="row" id="clrAll"><svg class="ic"><use href="#trash"/></svg><span class="t">Erase all data<small>Saved words, history and stats</small></span></button>
   </div>
-  <p class="msg">Definitions from dictionaryapi.dev. Related words from Datamuse.</p>
+  <p class="msg">Definitions from internet sources.<br>Developed by Jaywant · GitHub @xaywant</p>
 </main>
 
 <main class="view" id="appearance" hidden>
@@ -138,11 +178,15 @@ html.calm *{transition:none!important;scroll-behavior:auto!important}
     <button class="row" data-go="font"><span class="t">Font<small id="fontName"></small></span><svg class="ic go"><use href="#chev"/></svg></button>
     <div class="row"><span class="t">Text size</span></div>
     <div class="seg five"><button data-set="size" data-val="76">Tiny</button><button data-set="size" data-val="84">Small</button><button data-set="size" data-val="92">Normal</button><button data-set="size" data-val="102">Large</button><button data-set="size" data-val="114">XL</button></div>
-    <div class="row"><span class="t">Accent colour</span></div>
+    <div class="row"><span class="t">Accent colour<small>Pick a preset, or slide to any shade</small></span><i class="swatch" id="swatch"></i></div>
     <div class="dots" id="dots"></div>
+    <div class="rng"><input type="range" id="hue" class="hue" min="0" max="360" aria-label="Colour"></div>
+    <div class="rng"><input type="range" id="shade" class="shade" min="30" max="85" aria-label="Shade"></div>
   </div>
   <div class="group">
     <div class="row"><span class="t">Glass effect<small>Frosted blur on the floating bar</small></span><button class="sw" role="switch" data-tog="glass" aria-label="Glass effect"></button></div>
+    <div class="row"><span class="t">Glass strength<small>How frosted the panels look</small></span><span class="v" id="glv"></span></div>
+    <div class="rng"><input type="range" id="gl" min="0" max="100" aria-label="Glass strength"></div>
     <div class="row"><span class="t">Reduce animation<small>Turns off transitions</small></span><button class="sw" role="switch" data-tog="calm" aria-label="Reduce animation"></button></div>
   </div>
 </main>
@@ -168,6 +212,13 @@ html.calm *{transition:none!important;scroll-behavior:auto!important}
   </div>
 </main>
 
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<div class="dlg" id="dlg" role="dialog" aria-modal="true" aria-labelledby="dt" hidden>
+  <div class="box"><h3 id="dt"></h3><p id="dm"></p>
+    <div class="act"><button id="dn">Cancel</button><button id="dy" class="warn"></button></div></div>
+</div>
+
 <nav aria-label="Main">
   <button data-tab="home" aria-current="page"><svg class="ic"><use href="#home"/></svg>Home</button>
   <button data-tab="saved"><svg class="ic"><use href="#mark"/></svg>Library</button>
@@ -178,26 +229,34 @@ html.calm *{transition:none!important;scroll-behavior:auto!important}
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const ACC=["#4fc3cd","#a78bfa","#fb7185","#fbbf24","#4ade80"];
+const PRE=[[186,57],[255,72],[350,68],[42,58],[140,60]];
+function hsl2rgb(h,s,l){s/=100;l/=100;const k=n=>(n+h/30)%12,a=s*Math.min(l,1-l),f=n=>l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));return[f(0),f(8),f(4)].map(x=>Math.round(x*255))}
 const FONTS={default:"Default · Inter",heavy:"Heavy · Inter",serif:"Serif · Newsreader"};
-let S={theme:"dark",font:"default",accent:ACC[0],size:"92",glass:true,calm:false,defs:"3",ex:true,syn:true,...store.get("dict-settings",{})};
+let S={theme:"dark",font:"default",hue:186,light:57,glassAmt:35,size:"92",glass:true,calm:false,defs:"3",ex:true,syn:true,...store.get("dict-settings",{})};
 S.size=({88:"84",100:"92",112:"102",125:"114"})[S.size]||S.size;
 const mq=matchMedia("(prefers-color-scheme: dark)");
 
 function apply(){
   const h=document.documentElement,t=S.theme==="system"?(mq.matches?"dark":"light"):S.theme;
-  h.dataset.theme=t;h.dataset.font=S.font;h.style.fontSize=S.size+"%";h.style.setProperty("--accent",S.accent);
+  h.dataset.theme=t;h.dataset.font=S.font;h.style.fontSize=S.size+"%";const ac=`hsl(${S.hue} 65% ${S.light}%)`,[cr,cg,cb]=hsl2rgb(S.hue,65,S.light),ga=+S.glassAmt,lt=t==="light";
+  h.style.setProperty("--accent",ac);h.style.setProperty("--h",S.hue);h.style.setProperty("--on",(.299*cr+.587*cg+.114*cb)>150?"#04121a":"#fff");
+  h.style.setProperty("--blur",(8+ga*.4)+"px");
+  h.style.setProperty("--gl",lt?`rgba(255,255,255,${(.48+ga*.004).toFixed(3)})`:`rgba(255,255,255,${(.02+ga*.0014).toFixed(3)})`);
+  h.style.setProperty("--gb",lt?`rgba(255,255,255,${(.6+ga*.007).toFixed(3)})`:`rgba(255,255,255,${(.08+ga*.0014).toFixed(3)})`);
   h.classList.toggle("noglass",!S.glass);h.classList.toggle("calm",!!S.calm);
   document.querySelector("meta[name=theme-color]").content=t==="dark"?"#000000":"#f2f2f7";
   $$("[data-set]").forEach(b=>b.setAttribute("aria-pressed",S[b.dataset.set]==b.dataset.val));
   $$("[data-set=font] .ck").forEach(c=>c.textContent="");
   const on=$(`[data-set=font][data-val=${S.font}] .ck`);if(on)on.textContent="✓";
   $$("[data-tog]").forEach(b=>b.setAttribute("aria-checked",!!S[b.dataset.tog]));
+  $("#hue").value=S.hue;$("#shade").value=S.light;$("#gl").value=S.glassAmt;$("#glv").textContent=S.glassAmt+"%";$("#swatch").style.background=ac;
+  $$("#dots button").forEach(x=>x.setAttribute("aria-pressed",+x.dataset.h===+S.hue&&+x.dataset.l===+S.light));
   $("#fontName").textContent=FONTS[S.font];
 }
 function save(){store.set("dict-settings",S);apply();if(cur)paint()}
 mq.addEventListener("change",apply);
-$("#dots").innerHTML=ACC.map(c=>`<button data-set="accent" data-val="${c}" style="background:${c}" aria-label="Accent ${c}"></button>`).join("");
+$("#dots").innerHTML=PRE.map(([h,l])=>`<button data-preset data-h="${h}" data-l="${l}" style="background:hsl(${h} 65% ${l}%)" aria-label="Preset colour"></button>`).join("");
+$("#hue").oninput=e=>{S.hue=+e.target.value;save()};$("#shade").oninput=e=>{S.light=+e.target.value;save()};$("#gl").oninput=e=>{S.glassAmt=+e.target.value;save()};
 
 /* navigation */
 const PARENT={appearance:"settings",defs:"settings",font:"appearance"},TOP={home:"home",saved:"saved"};
@@ -394,10 +453,17 @@ $("#q").oninput=e=>{
 };
 $("#clr").onclick=()=>{if(here().v==="home"&&here().s)history.back();else clearSearch()};
 $("nav").onclick=e=>{const b=e.target.closest("button");if(b)navTo(b.dataset.tab)};
-$("#clrHist").onclick=()=>store.set("dict-hist",[]);
-$("#clrAll").onclick=()=>{if(confirm("Erase saved words, history and stats?")){["dict-hist","dict-favs","dict-stats","dict-cache","dict-last"].forEach(k=>localStorage.removeItem(k));cur=null}};
+let tmr;function toast(m){const e=$("#toast");e.hidden=true;void e.offsetWidth;e.innerHTML='<svg class="ic"><use href="#ok"/></svg>'+esc(m);e.hidden=false;clearTimeout(tmr);tmr=setTimeout(()=>e.hidden=true,2300)}
+$("#clrHist").onclick=()=>{store.set("dict-hist",[]);toast("Recent searches cleared")};
+function ask(title,msg,yes){return new Promise(res=>{
+  const d=$("#dlg"),n=$("#dn"),y=$("#dy"),end=v=>{d.hidden=true;d.onclick=d.onkeydown=n.onclick=y.onclick=null;res(v)};
+  $("#dt").textContent=title;$("#dm").textContent=msg;y.textContent=yes;d.hidden=false;n.focus();
+  n.onclick=()=>end(false);y.onclick=()=>end(true);d.onclick=e=>{if(e.target===d)end(false)};d.onkeydown=e=>{if(e.key==="Escape")end(false)};
+})}
+$("#clrAll").onclick=async()=>{if(await ask("Erase all data?","Saved words, history and stats will be removed from this device.","Erase")){["dict-hist","dict-favs","dict-stats","dict-cache","dict-last"].forEach(k=>localStorage.removeItem(k));cur=null;toast("All data erased")}};
 document.addEventListener("click",e=>{
   const t=e.target,q=t.closest("[data-q]");if(q)return run(q.dataset.q);
+  const pr=t.closest("[data-preset]");if(pr){S.hue=+pr.dataset.h;S.light=+pr.dataset.l;return save()}
   const s=t.closest("[data-set]");if(s){S[s.dataset.set]=s.dataset.val;return save()}
   const g=t.closest("[data-tog]");if(g){S[g.dataset.tog]=!S[g.dataset.tog];return save()}
   const n=t.closest("[data-go]");if(n){pushSt(n.dataset.go,0);return go(n.dataset.go)}

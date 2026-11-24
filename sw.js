@@ -1,5 +1,6 @@
-// Caches the app shell so the app opens offline. Bump VERSION after editing files.
-const VERSION = "dictionary-v4";
+// Network-first: always loads the newest version when online, falls back to the saved copy offline.
+// Change VERSION whenever you publish new files.
+const VERSION = "dictionary-v7";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", e => {
@@ -11,7 +12,11 @@ self.addEventListener("activate", e => {
   self.clients.claim();
 });
 self.addEventListener("fetch", e => {
-  const url = new URL(e.request.url);
-  if (e.request.method !== "GET" || url.origin !== location.origin) return; // API calls go straight to network
-  e.respondWith(caches.match(e.request).then(hit => hit || fetch(e.request)));
+  const r = e.request;
+  if (r.method !== "GET" || new URL(r.url).origin !== location.origin) return; // dictionary APIs go straight to the network
+  e.respondWith(
+    fetch(r, { cache: "no-cache" })
+      .then(res => { if (res.ok) { const copy = res.clone(); caches.open(VERSION).then(c => c.put(r, copy)); } return res; })
+      .catch(() => caches.match(r).then(hit => hit || caches.match("./index.html")))
+  );
 });
