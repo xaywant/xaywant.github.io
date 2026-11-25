@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-font="default">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Dictionary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:wght@400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<style>
+:root{--gl:rgba(255,255,255,.07);--gb:rgba(255,255,255,.13);--bg:#000;--sf:#1c1c1e;--sf2:#2c2c2e;--ink:#fff;--mut:#8e8e93;--line:#2c2c2e;--accent:#4fc3cd;--on:#04121a;--glass:rgba(40,40,44,.55);--ff:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--tw:700;--ls:-.02em;--body:1rem}
+html[data-theme=light]{--gl:rgba(255,255,255,.62);--gb:rgba(255,255,255,.85);--bg:#f2f2f7;--sf:#fff;--sf2:#e5e5ea;--ink:#111;--mut:#6c6c70;--line:#e5e5ea;--glass:rgba(255,255,255,.6)}
+html[data-font=heavy]{--tw:800;--ls:-.035em}
+html[data-font=serif]{--ff:Newsreader,Georgia,serif;--tw:600;--ls:-.01em;--body:1.1rem}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg)}
+body{color:var(--ink);font:400 var(--body)/1.45 var(--ff);min-height:100vh}
+button,input,select{font:inherit;color:inherit}button{cursor:pointer;background:none;border:0;padding:0}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[hidden]{display:none!important}
+.ic{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.view{max-width:560px;margin:0 auto;padding:calc(20px + env(safe-area-inset-top,0px)) 16px 140px}
+h1{font:var(--tw) 2.5rem/1.05 var(--ff);letter-spacing:var(--ls);margin:6px 0 18px}
+h2{font:var(--tw) 1.25rem var(--ff);letter-spacing:var(--ls);margin:28px 0 10px}
+.back{width:46px;height:46px;border-radius:50%;background:var(--sf);border:1px solid var(--line);display:grid;place-items:center;margin-bottom:14px}
+.bar{display:flex;align-items:center;gap:10px;background:var(--sf);border-radius:18px;padding:0 14px;height:56px}
+.bar input{flex:1;min-width:0;background:none;border:0;outline:0;font-size:1.05rem}
+.bar input::placeholder{color:var(--mut)}.bar .x{color:var(--mut)}
+.cards{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 16px;margin:16px -16px 0;padding:0 16px;scrollbar-width:none}
+.stat{flex:0 0 66%;scroll-snap-align:start;border-radius:22px;padding:16px 18px;min-height:118px;gap:10px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(150deg,color-mix(in srgb,var(--accent) 42%,#000),color-mix(in srgb,var(--accent) 8%,#000) 80%);color:#fff;border:1px solid rgba(255,255,255,.08)}
+.stat small{letter-spacing:.14em;font-size:.72rem;opacity:.8;text-transform:uppercase}
+.stat b{display:block;font:var(--tw) 1.9rem/1.1 var(--ff);letter-spacing:var(--ls);word-break:break-word}
+.stat span{opacity:.85;font-size:.82rem}
+.group{background:var(--sf);border-radius:22px;overflow:hidden;margin-bottom:22px}
+.row{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:15px 18px;min-height:60px}
+.row+.row{border-top:1px solid var(--line)}
+.row .t{flex:1;min-width:0}.row .t small{display:block;color:var(--mut);font-size:.85rem;line-height:1.3}
+.row .v{color:var(--mut)}.row .go{color:var(--mut)}.row .ic{width:22px;height:22px}
+.empty{color:var(--mut);margin:0;height:56px;display:flex;align-items:center;padding:0 18px}
+.group:has(>.empty){border-radius:18px}
+.seg{display:flex;background:var(--sf2);border-radius:999px;padding:4px;margin:0 16px 14px}
+.seg button{flex:1;padding:10px 0;border-radius:999px;font-weight:600;color:var(--mut)}
+.seg button[aria-pressed=true]{background:var(--mut);color:var(--bg)}
+.seg.five button{font-size:.8rem;padding:10px 0}
+.sw{width:52px;height:30px;border-radius:999px;background:var(--sf2);position:relative;flex:none;transition:background .2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s}
+.sw[aria-checked=true]{background:#30d158}.sw[aria-checked=true]::after{transform:translateX(22px)}
+.dots{display:flex;gap:14px;padding:4px 18px 14px}
+.dots button{width:36px;height:36px;border-radius:50%;border:3px solid transparent;background-clip:padding-box;outline:2px solid transparent}
+.dots button[aria-pressed=true]{border-color:var(--bg);outline-color:var(--ink)}
+.card{background:var(--sf);border-radius:26px;padding:24px 20px;margin-top:20px}
+.top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.word{font:var(--tw) 2.3rem/1.08 var(--ff);letter-spacing:var(--ls);margin:0;word-break:break-word}
+.ph{color:var(--mut);margin-top:4px}
+.ib{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--accent);flex:none}
+.ib.on{background:var(--accent);color:var(--on);border-color:var(--accent)}
+.note{color:var(--mut);margin:14px 0 0;font-size:.92rem}
+.pos{color:var(--accent);font-weight:600;margin:24px 0 8px}
+ol{margin:0;padding-left:1.3rem}li{margin-bottom:12px;padding-left:4px}
+.ex{display:block;color:var(--mut);font-size:.95em;margin-top:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--sf2);border-radius:999px;padding:8px 15px}
+.sub{color:var(--mut);font-weight:600;font-size:.9rem;margin:24px 0 10px}
+.msg{color:var(--mut);margin:26px 4px}
+nav{position:fixed;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));max-width:520px;margin:0 auto;display:flex;padding:6px;border-radius:999px;background:var(--glass);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(calc(var(--blur,22px) + 4px)) saturate(180%);-webkit-backdrop-filter:blur(calc(var(--blur,22px) + 4px)) saturate(180%);z-index:5}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 0 7px;border-radius:999px;font-size:.75rem;font-weight:600;color:var(--mut)}
+nav button[aria-current=page]{background:rgba(127,127,127,.28);color:var(--ink)}
+html.noglass nav{background:var(--sf);backdrop-filter:none;-webkit-backdrop-filter:none}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(70% 38% at 10% -4%,color-mix(in srgb,var(--accent) 38%,transparent),transparent 70%),radial-gradient(55% 34% at 100% 38%,color-mix(in srgb,#a78bfa 26%,transparent),transparent 70%),radial-gradient(70% 40% at 0% 102%,color-mix(in srgb,var(--accent) 26%,transparent),transparent 70%)}
+html[data-theme=light] body::before{opacity:.5}
+.bar,.group,.card,.back{background:var(--gl);border:1px solid var(--gb);backdrop-filter:blur(var(--blur,22px)) saturate(160%);-webkit-backdrop-filter:blur(var(--blur,22px)) saturate(160%)}
+html.noglass body::before{display:none}
+html.noglass .bar,html.noglass .group,html.noglass .card,html.noglass .back{background:var(--sf);border-color:var(--line);backdrop-filter:none;-webkit-backdrop-filter:none}
+.sk{display:flex;flex-direction:column;gap:14px;padding:26px 20px}
+.sk .l{display:block;height:14px;border-radius:8px;background:linear-gradient(90deg,rgba(127,127,127,.14) 25%,rgba(127,127,127,.34) 50%,rgba(127,127,127,.14) 75%);background-size:200% 100%;animation:sh 1.3s linear infinite}
+.sk .w1{height:34px;width:48%;border-radius:12px;margin-bottom:6px}.sk .w2{width:24%}.sk .w3{width:92%}.sk .w4{width:78%}
+@keyframes sh{to{background-position:-200% 0}}
+html.calm .sk .l{animation:none}
+.dlg{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:24px;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.dlg .box{width:min(100%,340px);border-radius:26px;padding:24px 22px 16px;background:var(--bg);border:1px solid var(--gb);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+html:not(.noglass) .dlg .box{background:color-mix(in srgb,var(--sf) 72%,transparent);backdrop-filter:blur(calc(var(--blur,22px) + 8px)) saturate(170%);-webkit-backdrop-filter:blur(calc(var(--blur,22px) + 8px)) saturate(170%)}
+.dlg h3{font:var(--tw) 1.3rem var(--ff);letter-spacing:var(--ls);margin:0 0 6px}
+.dlg p{margin:0 0 18px;color:var(--mut)}
+.dlg .act{display:flex;gap:10px}
+.dlg .act button{flex:1;padding:13px 0;border-radius:999px;font-weight:600;background:rgba(127,127,127,.22)}
+.dlg .act .warn{background:#ff453a;color:#fff}
+.rng{padding:2px 18px 16px}
+.rng input{width:100%;-webkit-appearance:none;appearance:none;height:14px;border-radius:999px;background:var(--sf2);margin:0;outline-offset:6px}
+.rng input::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid rgba(0,0,0,.35);box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.rng input::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid rgba(0,0,0,.35)}
+.rng .hue{background:linear-gradient(90deg,hsl(0 65% 57%),hsl(45 65% 57%),hsl(90 65% 57%),hsl(135 65% 57%),hsl(180 65% 57%),hsl(225 65% 57%),hsl(270 65% 57%),hsl(315 65% 57%),hsl(360 65% 57%))}
+.rng .shade{background:linear-gradient(90deg,hsl(var(--h,186) 65% 30%),hsl(var(--h,186) 65% 85%))}
+.rng #gl{background:linear-gradient(90deg,rgba(127,127,127,.2),var(--accent))}
+.swatch{width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);flex:none}
+.toast{position:fixed;left:50%;top:calc(16px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:30;display:flex;align-items:center;gap:10px;padding:12px 20px;border-radius:999px;font-weight:600;white-space:nowrap;background:color-mix(in srgb,var(--sf) 82%,transparent);border:1px solid var(--gb);backdrop-filter:blur(24px) saturate(170%);-webkit-backdrop-filter:blur(24px) saturate(170%);box-shadow:0 10px 30px rgba(0,0,0,.35);animation:tin .35s cubic-bezier(.2,.8,.2,1)}
+.toast .ic{color:#30d158;width:20px;height:20px;stroke-width:2.6}
+@keyframes tin{from{opacity:0;transform:translate(-50%,-14px) scale(.95)}}
+html.noglass .toast{background:var(--sf);backdrop-filter:none;-webkit-backdrop-filter:none}
+html.nosplash #splash{display:none}
+#splash{position:fixed;inset:0;z-index:100;background:#000;display:grid;place-items:center}
+#splash .tile{width:132px;height:132px;border-radius:32px;display:grid;place-items:center;background:linear-gradient(145deg,#2b0707,#0e0000);border:1px solid rgba(255,70,70,.28);box-shadow:0 0 56px rgba(255,30,30,.28)}
+#splash svg{width:78px;height:auto;aspect-ratio:220/160;filter:drop-shadow(0 0 10px rgba(255,40,40,.5))}
+html{overscroll-behavior-y:none}
+#ptr{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));width:42px;height:42px;margin-left:-21px;border-radius:50%;display:grid;place-items:center;z-index:40;pointer-events:none;color:var(--accent);background:color-mix(in srgb,var(--sf) 86%,transparent);border:1px solid var(--gb);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 8px 24px rgba(0,0,0,.35);opacity:0;transform:translateY(-70px);transition:opacity .2s,transform .25s}
+#ptr.spin svg{animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+html.calm #ptr.spin svg{animation:none}
+html.calm *{transition:none!important;scroll-behavior:auto!important}
+</style>
+<script>try{var n=performance.getEntriesByType("navigation")[0];if((n&&n.type==="reload")||sessionStorage.getItem("dict-seen"))document.documentElement.classList.add("nosplash");sessionStorage.setItem("dict-seen","1")}catch(e){}</script>
+</head>
+<body>
+<div id="splash" aria-hidden="true"><div class="tile"><svg viewBox="0 0 220 160" fill="none">
+<defs>
+<linearGradient id="gP1" x1="0" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#ff6a5c"/><stop offset=".5" stop-color="#e41818"/><stop offset="1" stop-color="#a30000"/></linearGradient>
+<linearGradient id="gP2" x1="1" y1="0" x2=".1" y2="1"><stop offset="0" stop-color="#ff5547"/><stop offset=".5" stop-color="#d11212"/><stop offset="1" stop-color="#8a0000"/></linearGradient>
+<linearGradient id="gCv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a0505"/><stop offset="1" stop-color="#4a0000"/></linearGradient>
+</defs>
+<path d="M110 146C92 126 52 120 12 128V44C52 34 92 40 110 58C128 40 168 34 208 44V128C168 120 128 126 110 146Z" fill="url(#gCv)" stroke="url(#gCv)" stroke-width="6" stroke-linejoin="round"/>
+<path d="M110 62C90 44 52 38 20 46V118C52 110 90 116 110 134Z" fill="#b01010" stroke="#b01010" stroke-width="4" stroke-linejoin="round"/>
+<path d="M110 62C130 44 168 38 200 46V118C168 110 130 116 110 134Z" fill="#930a0a" stroke="#930a0a" stroke-width="4" stroke-linejoin="round"/>
+<path d="M110 52C90 34 52 28 20 36V110C52 102 90 108 110 126Z" fill="url(#gP1)" stroke="url(#gP1)" stroke-width="4" stroke-linejoin="round"/>
+<path d="M110 52C130 34 168 28 200 36V110C168 102 130 108 110 126Z" fill="url(#gP2)" stroke="url(#gP2)" stroke-width="4" stroke-linejoin="round"/>
+<path d="M110 54V124" stroke="#4d0000" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M28 40C58 35 88 41 104 56" stroke="#fff" stroke-opacity=".3" stroke-width="2" stroke-linecap="round"/>
+<path d="M192 40C162 35 132 41 116 56" stroke="#fff" stroke-opacity=".18" stroke-width="2" stroke-linecap="round"/>
+</svg></div></div>
+<script>(function(){var s=document.getElementById("splash");function go(){if(s){s.remove();s=null}}if(document.documentElement.classList.contains("nosplash")){go();return}requestAnimationFrame(function(){requestAnimationFrame(function(){setTimeout(go,1000)})});setTimeout(go,4000)})()</script>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 01-1 1h-4v-6h-8v6H4a1 1 0 01-1-1z"/></symbol>
+<symbol id="mark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></symbol>
+<symbol id="gear" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></symbol>
+<symbol id="find" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></symbol>
+<symbol id="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+<symbol id="back" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+<symbol id="x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="brush" viewBox="0 0 24 24"><path d="M12 3s6 6 6 11a6 6 0 01-12 0c0-5 6-11 6-11z"/></symbol>
+<symbol id="list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+<symbol id="ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+</defs></svg>
+
+<main class="view" id="home">
+  <h1>Dictionary</h1>
+  <form class="bar" id="form" autocomplete="off">
+    <svg class="ic"><use href="#find"/></svg>
+    <input id="q" type="text" placeholder="Search a word" aria-label="Search" enterkeyhint="search" autocapitalize="none" spellcheck="false">
+    <button type="button" class="x" id="clr" aria-label="Clear" hidden><svg class="ic"><use href="#x"/></svg></button>
+  </form>
+  <div id="landing">
+    <div class="cards" id="stats"></div>
+    <h2>Recents</h2>
+    <div class="group" id="recents"></div>
+  </div>
+  <div id="out" hidden></div>
+</main>
+
+<main class="view" id="saved" hidden>
+  <h1>Library</h1>
+  <h2>Saved words</h2><div class="group" id="favs"></div>
+  <h2>Recent searches</h2><div class="group" id="hist"></div>
+</main>
+
+<main class="view" id="settings" hidden>
+  <h1>Settings</h1>
+  <div class="group">
+    <button class="row" data-go="appearance"><svg class="ic"><use href="#brush"/></svg><span class="t">Appearance<small>Theme, font, colour, glass</small></span><svg class="ic go"><use href="#chev"/></svg></button>
+    <button class="row" data-go="defs"><svg class="ic"><use href="#list"/></svg><span class="t">Definitions<small>What each result shows</small></span><svg class="ic go"><use href="#chev"/></svg></button>
+  </div>
+  <div class="group">
+    <button class="row" id="clrHist"><svg class="ic"><use href="#trash"/></svg><span class="t">Clear recent searches</span></button>
+    <button class="row" id="clrAll"><svg class="ic"><use href="#trash"/></svg><span class="t">Erase all data<small>Saved words, history and stats</small></span></button>
+  </div>
+  <p class="msg">Definitions from internet sources.<br>Developed by Jaywant · GitHub @xaywant</p>
+</main>
+
+<main class="view" id="appearance" hidden>
+  <button class="back" data-back aria-label="Back"><svg class="ic"><use href="#back"/></svg></button>
+  <h1>Appearance</h1>
+  <div class="group">
+    <div class="row"><span class="t">Theme</span></div>
+    <div class="seg"><button data-set="theme" data-val="system">System</button><button data-set="theme" data-val="light">Light</button><button data-set="theme" data-val="dark">Dark</button></div>
+    <button class="row" data-go="font"><span class="t">Font<small id="fontName"></small></span><svg class="ic go"><use href="#chev"/></svg></button>
+    <div class="row"><span class="t">Text size</span></div>
+    <div class="seg five"><button data-set="size" data-val="76">Tiny</button><button data-set="size" data-val="84">Small</button><button data-set="size" data-val="92">Normal</button><button data-set="size" data-val="102">Large</button><button data-set="size" data-val="114">XL</button></div>
+    <div class="row"><span class="t">Accent colour<small>Pick a preset, or slide to any shade</small></span><i class="swatch" id="swatch"></i></div>
+    <div class="dots" id="dots"></div>
+    <div class="rng"><input type="range" id="hue" class="hue" min="0" max="360" aria-label="Colour"></div>
+    <div class="rng"><input type="range" id="shade" class="shade" min="30" max="85" aria-label="Shade"></div>
+  </div>
+  <div class="group">
+    <div class="row"><span class="t">Glass effect<small>Frosted blur on the floating bar</small></span><button class="sw" role="switch" data-tog="glass" aria-label="Glass effect"></button></div>
+    <div class="row"><span class="t">Glass strength<small>How frosted the panels look</small></span><span class="v" id="glv"></span></div>
+    <div class="rng"><input type="range" id="gl" min="0" max="100" aria-label="Glass strength"></div>
+    <div class="row"><span class="t">Reduce animation<small>Turns off transitions</small></span><button class="sw" role="switch" data-tog="calm" aria-label="Reduce animation"></button></div>
+  </div>
+</main>
+
+<main class="view" id="font" hidden>
+  <button class="back" data-back aria-label="Back"><svg class="ic"><use href="#back"/></svg></button>
+  <h1>Font</h1>
+  <div class="group">
+    <button class="row" data-set="font" data-val="default"><span class="t">Default<small>Inter · Balanced weights</small></span><span class="v ck"></span></button>
+    <button class="row" data-set="font" data-val="heavy"><span class="t">Heavy<small>Inter · Bold, tight headings</small></span><span class="v ck"></span></button>
+    <button class="row" data-set="font" data-val="serif"><span class="t">Serif<small>Newsreader · Book style</small></span><span class="v ck"></span></button>
+  </div>
+</main>
+
+<main class="view" id="defs" hidden>
+  <button class="back" data-back aria-label="Back"><svg class="ic"><use href="#back"/></svg></button>
+  <h1>Definitions</h1>
+  <div class="group">
+    <div class="row"><span class="t">Definitions per meaning<small>For each part of speech</small></span></div>
+    <div class="seg"><button data-set="defs" data-val="1">1</button><button data-set="defs" data-val="2">2</button><button data-set="defs" data-val="3">3</button><button data-set="defs" data-val="5">5</button></div>
+    <div class="row"><span class="t">Show examples</span><button class="sw" role="switch" data-tog="ex" aria-label="Show examples"></button></div>
+    <div class="row"><span class="t">Show synonyms and antonyms</span><button class="sw" role="switch" data-tog="syn" aria-label="Show synonyms and antonyms"></button></div>
+  </div>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<div id="ptr" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M20 12a8 8 0 11-2.6-5.9M20 4v5h-5"/></svg></div>
+
+<div class="dlg" id="dlg" role="dialog" aria-modal="true" aria-labelledby="dt" hidden>
+  <div class="box"><h3 id="dt"></h3><p id="dm"></p>
+    <div class="act"><button id="dn">Cancel</button><button id="dy" class="warn"></button></div></div>
+</div>
+
+<nav aria-label="Main">
+  <button data-tab="home" aria-current="page"><svg class="ic"><use href="#home"/></svg>Home</button>
+  <button data-tab="saved"><svg class="ic"><use href="#mark"/></svg>Library</button>
+  <button data-tab="settings"><svg class="ic"><use href="#gear"/></svg>Settings</button>
+</nav>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const PRE=[[186,57],[255,72],[350,68],[42,58],[140,60]];
+function hsl2rgb(h,s,l){s/=100;l/=100;const k=n=>(n+h/30)%12,a=s*Math.min(l,1-l),f=n=>l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));return[f(0),f(8),f(4)].map(x=>Math.round(x*255))}
+const FONTS={default:"Default · Inter",heavy:"Heavy · Inter",serif:"Serif · Newsreader"};
+let S={theme:"dark",font:"default",hue:186,light:57,glassAmt:35,size:"92",glass:true,calm:false,defs:"3",ex:true,syn:true,...store.get("dict-settings",{})};
+S.size=({88:"84",100:"92",112:"102",125:"114"})[S.size]||S.size;
+const mq=matchMedia("(prefers-color-scheme: dark)");
+
+function apply(){
+  const h=document.documentElement,t=S.theme==="system"?(mq.matches?"dark":"light"):S.theme;
+  h.dataset.theme=t;h.dataset.font=S.font;h.style.fontSize=S.size+"%";const ac=`hsl(${S.hue} 65% ${S.light}%)`,[cr,cg,cb]=hsl2rgb(S.hue,65,S.light),ga=+S.glassAmt,lt=t==="light";
+  h.style.setProperty("--accent",ac);h.style.setProperty("--h",S.hue);h.style.setProperty("--on",(.299*cr+.587*cg+.114*cb)>150?"#04121a":"#fff");
+  h.style.setProperty("--blur",(8+ga*.4)+"px");
+  h.style.setProperty("--gl",lt?`rgba(255,255,255,${(.48+ga*.004).toFixed(3)})`:`rgba(255,255,255,${(.02+ga*.0014).toFixed(3)})`);
+  h.style.setProperty("--gb",lt?`rgba(255,255,255,${(.6+ga*.007).toFixed(3)})`:`rgba(255,255,255,${(.08+ga*.0014).toFixed(3)})`);
+  h.classList.toggle("noglass",!S.glass);h.classList.toggle("calm",!!S.calm);
+  document.querySelector("meta[name=theme-color]").content=t==="dark"?"#000000":"#f2f2f7";
+  $$("[data-set]").forEach(b=>b.setAttribute("aria-pressed",S[b.dataset.set]==b.dataset.val));
+  $$("[data-set=font] .ck").forEach(c=>c.textContent="");
+  const on=$(`[data-set=font][data-val=${S.font}] .ck`);if(on)on.textContent="✓";
+  $$("[data-tog]").forEach(b=>b.setAttribute("aria-checked",!!S[b.dataset.tog]));
+  $("#hue").value=S.hue;$("#shade").value=S.light;$("#gl").value=S.glassAmt;$("#glv").textContent=S.glassAmt+"%";$("#swatch").style.background=ac;
+  $$("#dots button").forEach(x=>x.setAttribute("aria-pressed",+x.dataset.h===+S.hue&&+x.dataset.l===+S.light));
+  $("#fontName").textContent=FONTS[S.font];
+}
+function save(){store.set("dict-settings",S);apply();if(cur)paint()}
+mq.addEventListener("change",apply);
+$("#dots").innerHTML=PRE.map(([h,l])=>`<button data-preset data-h="${h}" data-l="${l}" style="background:hsl(${h} 65% ${l}%)" aria-label="Preset colour"></button>`).join("");
+$("#hue").oninput=e=>{S.hue=+e.target.value;save()};$("#shade").oninput=e=>{S.light=+e.target.value;save()};$("#gl").oninput=e=>{S.glassAmt=+e.target.value;save()};
+
+/* navigation */
+const PARENT={appearance:"settings",defs:"settings",font:"appearance"},TOP={home:"home",saved:"saved"};
+function go(v){
+  $$(".view").forEach(m=>m.hidden=m.id!==v);
+  const tab=TOP[v]||"settings";
+  $$("nav button").forEach(b=>b.dataset.tab===tab?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));
+  if(v==="home")landing();if(v==="saved")library();
+  scrollTo(0,0);cur_view=v;store.set("dict-view",v);
+}
+let cur_view="home";
+
+/* lists + stats */
+const rows=(l,del)=>l.length?l.map(w=>`<div class="row"><button class="t" data-q="${esc(w)}">${esc(w)}</button>${del?`<button data-del="${esc(w)}" aria-label="Remove ${esc(w)}" class="go"><svg class="ic"><use href="#x"/></svg></button>`:`<svg class="ic go"><use href="#chev"/></svg>`}</div>`).join(""):`<p class="empty">Nothing here yet.</p>`;
+const today=(d=new Date())=>d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+function landing(){
+  const st=store.get("dict-stats",{n:0,w:{},d:[],s:Date.now()});
+  const top=Object.entries(st.w).sort((a,b)=>b[1]-a[1])[0];
+  let streak=0,d=new Date();if(!st.d.includes(today(d)))d.setDate(d.getDate()-1);
+  while(st.d.includes(today(d))){streak++;d.setDate(d.getDate()-1)}
+  const since=new Date(st.s),ms=String(since.getMonth()+1).padStart(2,"0")+"/"+String(since.getFullYear()).slice(2);
+  $("#stats").innerHTML=[["Words looked up",st.n,`Since ${ms}`],["Top word",top?esc(top[0]):"None yet",top?`${top[1]} lookups`:"Search to start"],["Day streak",streak,streak===1?"day in a row":"days in a row"]]
+    .map(c=>`<div class="stat"><small>${c[0]}</small><b>${c[1]}</b><span>${c[2]}</span></div>`).join("");
+  $("#recents").innerHTML=rows(store.get("dict-hist",[]).slice(0,6),true);
+}
+function library(){$("#favs").innerHTML=rows(store.get("dict-favs",[]),false);$("#hist").innerHTML=rows(store.get("dict-hist",[]),true)}
+function record(term){
+  const key=term.toLowerCase(),st=store.get("dict-stats",{n:0,w:{},d:[],s:Date.now()});
+  st.n++;st.w[key]=(st.w[key]||0)+1;if(!st.d.includes(today()))st.d.push(today());st.d=st.d.slice(-400);store.set("dict-stats",st);
+  store.set("dict-hist",[term,...store.get("dict-hist",[]).filter(x=>x.toLowerCase()!==key)].slice(0,30));
+}
+
+/* understanding questions */
+const FILL=/\b(what('?s| is| are| does| do)?|whats|tell me|give me|show me|can you|could you|please|define|definition of|the meaning of|meaning of|mean(s|ing)?|synonyms?( of| for)?|antonyms?( of| for)?|opposites?( of| for)?|similar words?( to| for)?|words? like|another word for|explain|about|word)\b/gi;
+const STOP=new Set("a an the of is are was were for in to me it this that how i you do does did".split(" "));
+function parse(q){
+  const low=q.toLowerCase(),intent=/\b(synonyms?|similar words?|words? like|another word for)\b/.test(low)?"syn":/\b(antonyms?|opposites?)\b/.test(low)?"ant":"def";
+  const core=q.replace(/[?!.,;:"“”()]+/g," ").replace(FILL," ").replace(/\s+/g," ").trim();
+  let w=core.split(" ").filter(Boolean),c=w.filter(x=>!STOP.has(x.toLowerCase()));if(!c.length)c=w;
+  return{intent,words:c};
+}
+
+/* data */
+const strip=h=>{const d=document.createElement("div");d.innerHTML=h;return(d.textContent||"").replace(/\s+/g," ").trim()};
+const POS={n:"noun",v:"verb",adj:"adjective",adv:"adverb",u:""};
+async function primary(key){
+  const r=await fetch("https://api.dictionaryapi.dev/api/v2/entries/en/"+encodeURIComponent(key));
+  if(r.status===404)return null;if(!r.ok)throw new Error("net");
+  const list=await r.json(),e=list[0];
+  const meanings=list.flatMap(x=>x.meanings||[]);
+  const m=meanings.filter(x=>x.definitions?.length).map(x=>({pos:x.partOfSpeech,defs:x.definitions.slice(0,6).map(d=>({d:d.definition,ex:d.example||""})),syn:[...(x.synonyms||[]),...x.definitions.flatMap(d=>d.synonyms||[])],ant:[...(x.antonyms||[]),...x.definitions.flatMap(d=>d.antonyms||[])]}));
+  if(!m.length)return null;
+  return{ph:e.phonetic||list.flatMap(x=>x.phonetics||[]).map(p=>p.text).find(Boolean)||"",m};
+}
+async function wiktionary(key){
+  const r=await fetch("https://en.wiktionary.org/api/rest_v1/page/definition/"+encodeURIComponent(key));
+  if(!r.ok)return null;
+  const j=await r.json(),en=j.en;if(!en||!en.length)return null;
+  const m=en.map(x=>({pos:(x.partOfSpeech||"").toLowerCase(),defs:(x.definitions||[]).map(d=>({d:strip(d.definition||""),ex:strip((d.examples||d.parsedExamples?.map(q=>q.example)||[])[0]||"")})).filter(d=>d.d).slice(0,6),syn:[],ant:[]})).filter(x=>x.defs.length);
+  return m.length?{ph:"",m}:null;
+}
+async function datamuse(key){
+  const r=await fetch("https://api.datamuse.com/words?md=d&max=1&sp="+encodeURIComponent(key));
+  if(!r.ok)return null;
+  const j=await r.json(),w=j[0];if(!w||w.word.toLowerCase()!==key||!w.defs)return null;
+  const by={};w.defs.forEach(x=>{const[t,...d]=x.split("\t");(by[t]=by[t]||[]).push({d:d.join(" "),ex:""})});
+  const m=Object.entries(by).map(([t,defs])=>({pos:POS[t]??t,defs:defs.slice(0,6),syn:[],ant:[]}));
+  return m.length?{ph:"",m}:null;
+}
+async function fetchWord(key,fresh){
+  const cache=store.get("dict-cache",{});if(cache[key]&&!fresh)return cache[key];
+  let res=null,failed=false;
+  for(const f of [primary,wiktionary,datamuse]){
+    try{res=await f(key)}catch{failed=true;res=null}
+    if(res)break;
+  }
+  if(!res){if(failed)throw new Error("net");return null}
+  cache[key]=res;const k=Object.keys(cache);if(k.length>150)delete cache[k[0]];store.set("dict-cache",cache);return res;
+}
+const related=async(t,w)=>{try{return(await(await fetch(`https://api.datamuse.com/words?max=8&rel_${t}=${encodeURIComponent(w)}`)).json()).map(x=>x.word)}catch{return[]}};
+
+/* result */
+let cur=null;
+function simplePh(ipa){
+  if(!ipa)return"";
+  let t=ipa.replace(/[\/\[\]()]/g,"").trim();
+  const map=[["tʃ","ch"],["dʒ","j"],["ʃ","sh"],["ʒ","zh"],["θ","th"],["ð","th"],["ŋ","ng"],["j","y"],["ɹ","r"],["ɾ","t"],["ɡ","g"],
+   ["aɪ","eye"],["eɪ","ay"],["ɔɪ","oy"],["aʊ","ow"],["əʊ","oh"],["oʊ","oh"],["ɪə","eer"],["ɛə","air"],["eə","air"],["ʊə","oor"],
+   ["iː","ee"],["uː","oo"],["ɑː","ah"],["ɔː","aw"],["ɜː","ur"],["ɝ","ur"],["ɚ","er"],["æ","a"],["ɛ","e"],["ɪ","i"],["ɒ","o"],["ɑ","ah"],["ɔ","aw"],["ʊ","u"],["ʌ","uh"],["ə","uh"],["ː",""],["ʔ",""],["ˑ",""]];
+  const parts=t.split(/([ˈˌ.])/).reduce((o,x)=>{if(x==="ˈ")o.s=true;else if(x==="ˌ"||x===".")o.s=false;else if(x){let y=x;map.forEach(([a,b])=>y=y.split(a).join(b));y=y.replace(/[^a-z]/gi,"");if(y)o.l.push(o.s?y.toUpperCase():y);o.s=false}return o},{l:[],s:false}).l;
+  return parts.length?parts.join("-"):"";
+}
+const uniq=a=>[...new Set(a)].slice(0,8);
+const chips=l=>`<div class="chips">${l.map(w=>`<button class="chip" data-q="${esc(w)}">${esc(w)}</button>`).join("")}</div>`;
+function paint(){
+  const c=cur,n=+S.defs,saved=store.get("dict-favs",[]).some(x=>x.toLowerCase()===c.term.toLowerCase());
+  const syn=uniq([...c.e.m.flatMap(x=>x.syn),...c.rel.syn]),ant=uniq([...c.e.m.flatMap(x=>x.ant),...c.rel.ant]);
+  const none=t=>`<div class="sub">${t}</div><p class="note" style="margin:0">None found for this word.</p>`;
+  const blocks={syn:syn.length?`<div class="sub">Synonyms</div>${chips(syn)}`:(c.done?none("Synonyms"):""),ant:ant.length?`<div class="sub">Antonyms</div>${chips(ant)}`:(c.done?none("Antonyms"):"")};
+  const order=c.intent==="ant"?["ant","syn"]:["syn","ant"];
+  $("#out").innerHTML=`<article class="card">
+   <div class="top"><div><h2 class="word" style="margin:0">${esc(c.term)}</h2><div class="ph">${esc([...new Set(c.e.m.map(x=>x.pos).filter(Boolean))].join(" · "))}${simplePh(c.e.ph)?` &nbsp;|&nbsp; sounds like <b>${esc(simplePh(c.e.ph))}</b>`:""}</div></div>
+   <button class="ib ${saved?"on":""}" id="fav" aria-pressed="${saved}" aria-label="${saved?"Remove from saved":"Save word"}"><svg class="ic" style="fill:${saved?"currentColor":"none"}"><use href="#mark"/></svg></button></div>
+   ${c.note?`<p class="note">${c.note}</p>`:""}
+   ${S.syn&&c.intent!=="def"?order.map(k=>blocks[k]).join(""):""}
+   ${c.e.m.map(m=>`<div class="pos">${esc(m.pos)}</div><ol>${m.defs.slice(0,n).map(x=>`<li>${esc(x.d)}${S.ex&&x.ex?`<span class="ex">“${esc(x.ex)}”</span>`:""}</li>`).join("")}</ol>`).join("")}
+   ${S.syn&&c.intent==="def"?order.map(k=>blocks[k]).join(""):""}
+   ${c.alts.length?`<div class="sub">Also in your question</div>${chips(c.alts)}`:""}
+  </article>`;
+}
+const skel=()=>{$("#landing").hidden=true;$("#out").hidden=false;$("#out").innerHTML='<article class="card sk" aria-busy="true" aria-label="Looking up"><i class="l w1"></i><i class="l w2"></i><i class="l w3"></i><i class="l w4"></i><i class="l w3"></i></article>'};
+const say=h=>{$("#landing").hidden=true;$("#out").hidden=false;$("#out").innerHTML=`<p class="msg">${h}</p>`};
+async function resolve(q,fresh){
+  const p=parse(q),tries=p.words.length>1?[p.words.join(" "),...[...p.words].sort((a,b)=>b.length-a.length)]:p.words;
+  for(const t of [...new Set(tries)].slice(0,4)){if(!/[a-z]/i.test(t))continue;const e=await fetchWord(t.toLowerCase(),fresh);if(e)return{p,term:t,e}}
+  return null;
+}
+async function present(q,r){
+  const{p,term,e}=r,alts=p.words.length>1?p.words.filter(w=>w.toLowerCase()!==term.toLowerCase()).slice(0,4):[];
+  const note=term.toLowerCase()!==q.toLowerCase()?`Showing “${esc(term)}” for “${esc(q)}”`:"";
+  const keep=cur&&cur.term===term?cur.rel:{syn:[],ant:[]};
+  $("#landing").hidden=true;$("#out").hidden=false;
+  const needS=!e.m.some(x=>x.syn.length),needA=!e.m.some(x=>x.ant.length);
+  const fetchMore=S.syn&&(needS||needA)&&!keep.syn.length&&!keep.ant.length;
+  cur={term,e,intent:p.intent,alts,note,rel:keep,done:!fetchMore};paint();
+  if(fetchMore){
+    const s=needS?await related("syn",term):[];let a=needA?await related("ant",term):[];
+    if(needA&&!a.length){const base=[...new Set([...e.m.flatMap(x=>x.syn),...s])].slice(0,6);a=[...new Set((await Promise.all(base.map(w=>related("ant",w)))).flat())].filter(w=>w.toLowerCase()!==term.toLowerCase()).slice(0,8)}
+    if(needA&&!a.length){const t=term.toLowerCase(),cands=[];["un","in","im","dis","non","il","ir"].forEach(p=>cands.push(p+t));if(/^(un|in|im|dis|non)/.test(t))cands.push(t.replace(/^(un|in|im|dis|non)/,""));
+      const ok=await Promise.all(cands.map(async w=>{try{const j=await(await fetch("https://api.datamuse.com/words?md=f&max=1&sp="+encodeURIComponent(w))).json();const f=j[0]&&j[0].word===w&&parseFloat((j[0].tags||[]).find(x=>x.startsWith("f:"))?.slice(2)||0)>0.5;return f?w:null}catch{return null}}));
+      a=ok.filter(Boolean).slice(0,3)}
+    if(cur&&cur.e===e){cur.rel={syn:s,ant:a};cur.done=true;paint()}
+  }
+}
+let runId=0;
+async function run(raw){
+  runId++;armed=false;
+  const q=raw.trim();go("home");
+  if(!q){store.set("dict-last","");$("#out").hidden=true;$("#landing").hidden=false;$("#clr").hidden=true;return}
+  if(!(here().v==="home"&&here().s))pushSt("home",1);
+  $("#q").value=q;$("#clr").hidden=false;skel();
+  const id=++runId;let r;try{[r]=await Promise.all([resolve(q,false),new Promise(ok=>setTimeout(ok,700))])}catch{if(id===runId)say("Couldn’t reach the dictionary. Check your connection and try again.");return}
+  if(id!==runId)return;
+  if(!r)return say(`No definition found for “${esc(q)}”. Check the spelling or try a single word.`);
+  store.set("dict-last",q);record(r.term);present(q,r);
+}
+async function restore(){
+  const q=store.get("dict-last","");if(!q)return;
+  $("#q").value=q;$("#clr").hidden=false;
+  try{let r=await resolve(q,false);if(r)await present(q,r);r=await resolve(q,true);if(r&&$("#q").value===q)await present(q,r)}catch{}
+}
+
+/* ---- back button: history mirrors the app state ---- */
+let stk=[{v:"home",s:0,i:0}],idx=0;
+const here=()=>stk[idx];
+const keep=()=>{try{sessionStorage.setItem("dict-stk",JSON.stringify({stk}))}catch{}};
+function pushSt(v,sr){const st={v,s:sr,i:idx+1};stk=stk.slice(0,idx+1);stk.push(st);idx++;history.pushState(st,"");keep()}
+function replSt(v,sr){const st={v,s:sr,i:idx};stk[idx]=st;history.replaceState(st,"");keep()}
+function clearSearch(){runId++;$("#q").value="";cur=null;$("#out").hidden=true;$("#out").innerHTML="";$("#landing").hidden=false;$("#clr").hidden=true;store.set("dict-last","")}
+function navTo(v){
+  if(v==="home"){
+    if(cur_view==="home")return go("home");
+    let j=idx;while(j>0&&stk[j].v!=="home")j--;
+    if(j<idx)history.go(j-idx);else go("home");return;
+  }
+  if(cur_view===v)return;
+  here().v==="home"?pushSt(v,0):replSt(v,0);go(v);
+}
+/* on refresh the browser keeps its history, so pick up where we were */
+let restored=false;
+try{const sv=JSON.parse(sessionStorage.getItem("dict-stk")||"null"),hs=history.state;
+  if(sv&&hs&&typeof hs.i==="number"&&sv.stk[hs.i]&&sv.stk[hs.i].v===hs.v){stk=sv.stk;idx=hs.i;restored=true}}catch{}
+if(!restored)history.replaceState(stk[0],"");
+addEventListener("popstate",e=>{
+  const st=e.state||{v:"home",s:0,i:0};idx=st.i||0;stk[idx]=st;keep();
+  if(st.v==="home"&&!st.s)clearSearch();
+  go(st.v);
+});
+/* restored search from last session: add its history step on the first tap (browsers ignore entries made without a tap) */
+let armed=!!store.get("dict-last","")&&!(restored&&here().s),pend=[];
+if(!restored){let v=store.get("dict-view","home");if(["saved","settings","appearance","font","defs"].includes(v))while(v){pend.unshift(v);v=PARENT[v]}}
+["pointerup","touchend","click","keydown"].forEach(ev=>addEventListener(ev,()=>{
+  if(!armed&&!pend.length)return;
+  if(armed){armed=false;if($("#q").value&&here().v==="home"&&!here().s)pushSt("home",1)}
+  if(pend.length){const l=pend;pend=[];l.forEach(v=>pushSt(v,0))}
+},true));
+
+/* events */
+$("#form").onsubmit=e=>{e.preventDefault();$("#q").blur();run($("#q").value)};
+$("#q").oninput=e=>{
+  const v=e.target.value;$("#clr").hidden=!v;armed=false;
+  if(v&&here().v==="home"&&!here().s)pushSt("home",1);
+  else if(!v&&here().v==="home"&&here().s&&$("#out").hidden)history.back();
+};
+$("#clr").onclick=()=>{if(here().v==="home"&&here().s)history.back();else clearSearch()};
+$("nav").onclick=e=>{const b=e.target.closest("button");if(b)navTo(b.dataset.tab)};
+let tmr;function toast(m){const e=$("#toast");e.hidden=true;void e.offsetWidth;e.innerHTML='<svg class="ic"><use href="#ok"/></svg>'+esc(m);e.hidden=false;clearTimeout(tmr);tmr=setTimeout(()=>e.hidden=true,2300)}
+$("#clrHist").onclick=()=>{store.set("dict-hist",[]);toast("Recent searches cleared")};
+function ask(title,msg,yes){return new Promise(res=>{
+  const d=$("#dlg"),n=$("#dn"),y=$("#dy"),end=v=>{d.hidden=true;d.onclick=d.onkeydown=n.onclick=y.onclick=null;res(v)};
+  $("#dt").textContent=title;$("#dm").textContent=msg;y.textContent=yes;d.hidden=false;n.focus();
+  n.onclick=()=>end(false);y.onclick=()=>end(true);d.onclick=e=>{if(e.target===d)end(false)};d.onkeydown=e=>{if(e.key==="Escape")end(false)};
+})}
+$("#clrAll").onclick=async()=>{if(await ask("Erase all data?","Saved words, history and stats will be removed from this device.","Erase")){["dict-hist","dict-favs","dict-stats","dict-cache","dict-last"].forEach(k=>localStorage.removeItem(k));cur=null;toast("All data erased")}};
+document.addEventListener("click",e=>{
+  const t=e.target,q=t.closest("[data-q]");if(q)return run(q.dataset.q);
+  const pr=t.closest("[data-preset]");if(pr){S.hue=+pr.dataset.h;S.light=+pr.dataset.l;return save()}
+  const s=t.closest("[data-set]");if(s){S[s.dataset.set]=s.dataset.val;return save()}
+  const g=t.closest("[data-tog]");if(g){S[g.dataset.tog]=!S[g.dataset.tog];return save()}
+  const n=t.closest("[data-go]");if(n){pushSt(n.dataset.go,0);return go(n.dataset.go)}
+  if(t.closest("[data-back]"))return history.back();
+  const d=t.closest("[data-del]");if(d){store.set("dict-hist",store.get("dict-hist",[]).filter(x=>x!==d.dataset.del));return cur_view==="saved"?library():landing()}
+  if(t.closest("#fav")&&cur){let f=store.get("dict-favs",[]);const k=cur.term.toLowerCase();f=f.some(x=>x.toLowerCase()===k)?f.filter(x=>x.toLowerCase()!==k):[cur.term,...f];store.set("dict-favs",f);paint()}
+});
+apply();landing();restore();
+{const OK=["saved","settings","appearance","font","defs"],sv=store.get("dict-view","home"),lv=restored&&OK.includes(here().v)?here().v:sv;
+if(OK.includes(lv)){if(restored&&here().v==="home"){let v=lv;while(v){pend.unshift(v);v=PARENT[v]}}go(lv)}}
+
+/* pull down from the top of any screen to refresh */
+(function(){const p=$("#ptr");let y0=0,dy=0,on=false;const GO=85;
+addEventListener("touchstart",e=>{on=scrollY<=0&&e.touches.length===1&&$("#dlg").hidden&&!e.target.closest(".cards,input,.rng");y0=e.touches[0].clientY;dy=0},{passive:true});
+addEventListener("touchmove",e=>{if(!on)return;dy=e.touches[0].clientY-y0;if(dy<=0){p.style.opacity=0;return}
+  p.style.transition="none";p.style.opacity=Math.min(1,dy/GO);p.style.transform=`translateY(${Math.min(dy*.5,70)-60}px) rotate(${dy*2.5}deg)`},{passive:true});
+addEventListener("touchend",()=>{if(!on)return;on=false;p.style.transition="";
+  if(dy>GO){p.classList.add("spin");p.style.opacity=1;p.style.transform="translateY(14px)";setTimeout(()=>location.reload(),450)}
+  else{p.style.opacity=0;p.style.transform=""}dy=0},{passive:true});
+})();
+</script>
+</body>
+</html>
